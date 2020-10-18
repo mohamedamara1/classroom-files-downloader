@@ -8,24 +8,23 @@ from googleapiclient.http import MediaIoBaseDownload
 import io
 import os
 import os.path
+from os import path
 
 
 def main():
 
     service = get_classroom_service()
-    courses = service.courses().list(pageSize=11).execute()
+    courses = service.courses().list(pageSize=12).execute()
 
     for course in courses['courses']:
 
         course_name = course['name']
         course_id = course['id']
 
-        try:
+        if not (path.exists(course_name)):
             os.mkdir('./' + course_name)
-        except OSError:
-            print("Creation of {} directory failed".format(course_name))
         else:
-            print("Created {} directory ".format(course_name))
+            print("{} Already exists ".format(course_name))
 
         anoncs = service.courses().announcements().list(
             courseId=course_id).execute()
@@ -124,11 +123,13 @@ def download_annonc_files(announcements, course_name):
                         os.path.splitext(file_name)
                     )[1]  #the extension exists in second elemnts of returned tuple
                     print(extension)
+                    path_str = os.path.join('./', course_name, file_name)
 
-                    if (valid(extension[1:])):
+                    if (valid(extension[1:]) and not (path.exists(path_str))):
                         print(file_name)
                         download_file(file_id, file_name, course_name)
-                        print("HAHAHA")
+                    else:
+                        print(file_name, "already exists")
             except KeyError as e:
                 print("this announcement doesn't have any file to download")
 
@@ -145,11 +146,13 @@ def download_works_files(works, course_name):
                     extension = (
                         os.path.splitext(file_name)
                     )[1]  #the extension exists in second elemnts of returned tuple
-                    print(extension)
-                    if (valid(extension[1:])):
+                    path_str = os.path.join('./', course_name, file_name)
+                    if ((valid(extension[1:]))
+                            and not (path.exists(path_str))):
                         print(file_name)
                         download_file(file_id, file_name, course_name)
-                        print("HAHAHA")
+                    else:
+                        print(file_name, "already exists")
             except KeyError as e:
                 print("this work doesn't have any file to download")
 
@@ -157,10 +160,9 @@ def download_works_files(works, course_name):
 def valid(ch):
     return ch in [
         'pdf', 'docx', 'pptx', 'png', 'jpg', 'html', 'css', 'js', 'java',
-        'class', 'txt', 'r', 'm'
+        'class', 'txt', 'r', 'm', ' sql'
     ]
 
 
-#his
 if __name__ == '__main__':
     main()
