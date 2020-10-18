@@ -122,7 +122,6 @@ def download_annonc_files(announcements, course_name):
                     extension = (
                         os.path.splitext(file_name)
                     )[1]  #the extension exists in second elemnts of returned tuple
-                    print(extension)
                     path_str = os.path.join('./', course_name, file_name)
 
                     if (valid(extension[1:]) and not (path.exists(path_str))):
@@ -131,7 +130,7 @@ def download_annonc_files(announcements, course_name):
                     else:
                         print(file_name, "already exists")
             except KeyError as e:
-                print("this announcement doesn't have any file to download")
+                continue
 
 
 def download_works_files(works, course_name):
@@ -154,7 +153,7 @@ def download_works_files(works, course_name):
                     else:
                         print(file_name, "already exists")
             except KeyError as e:
-                print("this work doesn't have any file to download")
+                continue
 
 
 def valid(ch):
