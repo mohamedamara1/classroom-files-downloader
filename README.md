@@ -3,6 +3,7 @@
   Prerequisities:
 
   Python
+  
   Pip
 
 How to setup the necessary files for the script?
