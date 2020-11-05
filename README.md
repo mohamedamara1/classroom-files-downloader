@@ -1,9 +1,9 @@
-A script that automates downloading Google Classroom files and organizes them each in their appropriate folder.
+  A script that automates downloading Google Classroom files and organizes them each in their appropriate folder.
 
-Prerequisities:
+  Prerequisities:
 
-Python
-Pip
+  Python
+  Pip
 
 How to setup the necessary files for the script?
 
