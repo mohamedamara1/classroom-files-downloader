@@ -29,7 +29,7 @@ we're almost done
   
   Last part is about choosing the number of courses to download , which you will set by editing a variable value in the script:
     
-    - open the automatingv3.py in any text editor you want
+    - open the automating.py in any text editor you want
     
     - CTRL +F  to look for the word "pageSize" 
     
