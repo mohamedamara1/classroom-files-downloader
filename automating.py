@@ -14,7 +14,7 @@ import pprint
 def main():
 
     service = get_classroom_service()
-    courses = service.courses().list(pageSize=19).execute()
+    courses = service.courses().list(pageSize=20).execute()
     
     downd_files=list()
 
@@ -150,12 +150,15 @@ def download_works_files(works, course_name):
                     file_id = val['driveFile']['driveFile']['id']
                     file_name = val['driveFile']['driveFile']['title']
 
+                    if (file_name[0:10] == "[Template]"):
+                        file_altern_link = val['driveFile']['driveFile']['alternateLink']
+
+                        file_id = file_altern_link[file_altern_link.find('=')+1:]
                     extension = (
                         os.path.splitext(file_name)
                     )[1]  #the extension exists in second elemnts of returned tuple
                     path_str = os.path.join('./', course_name, file_name)
-                    if ((valid(extension[1:]))
-                            and not (path.exists(path_str))):
+                    if ((valid(extension[1:])) and not (path.exists(path_str))) :
                         print(file_name)
                         download_file(file_id, file_name, course_name)
                         downloaded.append("Devoir :  "+course_name +' : ' + file_name)                        
@@ -169,7 +172,7 @@ def download_works_files(works, course_name):
 def valid(ch):
     return ch in [
         'pdf', 'docx', 'pptx', 'png', 'jpg', 'html', 'css', 'js', 'java',
-        'class', 'txt', 'r', 'm', ' sql', 'doc', 'mp3'
+        'class', 'txt', 'r', 'm', ' sql', 'doc', 'mp3', 'rar', 'zip'
     ]
 
 
