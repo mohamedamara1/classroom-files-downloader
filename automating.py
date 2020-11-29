@@ -25,6 +25,8 @@ def main():
 
         if not (path.exists(course_name)):
             os.mkdir('./' + course_name)
+            os.mkdir('./' +course_name+ "/cours")
+            os.mkdir('./' + course_name+"/td")
         else:
             print("{} Already exists ".format(course_name))
 
@@ -120,6 +122,8 @@ def download_annonc_files(announcements, course_name):
     annonc_list = announcements.keys()
     downloaded = list()
     if (len(annonc_list) != 0):
+        present_files = getListOfFiles(os.path.join('./', course_name))
+
         for announcement in announcements['announcements']:
             try:  #if this announcements contain a file then do this
                 for val in announcement['materials']:
@@ -130,8 +134,8 @@ def download_annonc_files(announcements, course_name):
                     )[1]  #the extension exists in second elemnts of returned tuple
                     path_str = os.path.join('./', course_name, file_name)
 
-                    if (valid(extension[1:]) and not (path.exists(path_str))):
-                        print(file_name)
+                    if ((valid(extension[1:])) and (file_name not in present_files)) :
+                        print("DOWNLOADING " ,file_name)
                         download_file(file_id, file_name, course_name)
                         downloaded.append("Annonoucemet :  "+course_name +' : ' + file_name)                        
                     else:
@@ -144,6 +148,8 @@ def download_works_files(works, course_name):
     works_list = works.keys()
     downloaded = list()
     if (len(works_list) != 0):
+        present_files = getListOfFiles(os.path.join('./', course_name))
+
         for work in works['courseWork']:
             try:  #if this announcements contain a file then do this
                 for val in work['materials']:
@@ -158,8 +164,8 @@ def download_works_files(works, course_name):
                         os.path.splitext(file_name)
                     )[1]  #the extension exists in second elemnts of returned tuple
                     path_str = os.path.join('./', course_name, file_name)
-                    if ((valid(extension[1:])) and not (path.exists(path_str))) :
-                        print(file_name)
+                    if ((valid(extension[1:])) and (file_name not in present_files)) :
+                        print("DOWNLOADING " ,file_name)
                         download_file(file_id, file_name, course_name)
                         downloaded.append("Devoir :  "+course_name +' : ' + file_name)                        
                     else:
@@ -175,6 +181,23 @@ def valid(ch):
         'class', 'txt', 'r', 'm', ' sql', 'doc', 'mp3', 'rar', 'zip'
     ]
 
+
+def getListOfFiles(dirName):
+    # create a list of file and sub directories 
+    # names in the given directory 
+    listOfFile = os.listdir(dirName)
+    allFiles = list()
+    # Iterate over all the entries
+    for entry in listOfFile:
+        # Create full path
+        fullPath = os.path.join(dirName, entry)
+        # If entry is a directory then get the list of files in this directory 
+        if os.path.isdir(fullPath):
+            allFiles = allFiles + getListOfFiles(fullPath)
+        else:
+            allFiles.append(fullPath)
+                
+    return [ch[ch.rfind('/')+1:] for ch in allFiles]
 
 if __name__ == '__main__':
     main()
